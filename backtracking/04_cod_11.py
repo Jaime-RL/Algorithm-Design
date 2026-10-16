@@ -13,31 +13,21 @@ class Parcial_ct(base.Parcial):
 
     def cota(self):
 
-        miembros = self.miembros
-        habilidades = self.habilidades
-
-        mejor_equipo_CS = extra.Parcial_vrz("04_dat_01.txt").voraz()
-
-        habilidades_obtenidas = list()
-        habilidades_restantes = [i for i in range(136)]
-
-        candidatos_evaluados = 0
-        tamaño_equipo = 0
-
-        # casos base
-        if len(habilidades_obtenidas) == 137:
-            return self
-
-        if candidatos_evaluados == len(self.fichas):
-            return self
+        habilidades_restantes = set(range(self.cardinal))
 
         # poda -> cota inferior
-        habilidades_restantes = habilidades_restantes.difference(habilidades_obtenidas)
-        numero_personas_min = math.ceil(habilidades_restantes / 10)
+        habilidades_restantes = habilidades_restantes.difference(self.habilidades)
+        maximo = max(len(habs-self.habilidades) for _,habs in self.fichas)
+        # error en la division
+        numero_personas_min = math.ceil(habilidades_restantes / maximo)
 
-        cota_inferior = tamaño_equipo + numero_personas_min
-        
-        if cota_inferior >= mejor_equipo_CS:
+        cota_inferior = self.coste() + numero_personas_min
+
+        return cota_inferior
+
+    
+
+
 
 
 

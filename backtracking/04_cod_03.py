@@ -83,7 +83,10 @@ class Parcial:
         i = lib
         for etiq, habs in self.fichas[lib:]:
             ap = self.copia()
-            # TODO: Complete la definición de ap.
+            
+            ap.miembros.append(int(etiq))
+            ap.habilidades.update(habs)
+            
             yield ap
             i += 1
 
