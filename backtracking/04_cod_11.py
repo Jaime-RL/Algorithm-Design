@@ -17,18 +17,16 @@ class Parcial_ct(base.Parcial):
 
         # poda -> cota inferior
         habilidades_restantes = habilidades_restantes.difference(self.habilidades)
-        maximo = max(len(habs-self.habilidades) for _,habs in self.fichas)
-        # error en la division
-        numero_personas_min = math.ceil(habilidades_restantes / maximo)
+        maximo = max(
+            (len(habs - self.habilidades) for _, habs in self.fichas),
+            default=0,
+        )
+
+        numero_personas_min = 0
+
+        if maximo != 0:
+            numero_personas_min = math.ceil(len(habilidades_restantes) / maximo)
 
         cota_inferior = self.coste() + numero_personas_min
 
         return cota_inferior
-
-    
-
-
-
-
-
-
