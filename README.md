@@ -32,8 +32,9 @@ Given a set of people, each with a set of skills, choose the **smallest team tha
 
 ```bash
 cd backtracking
-python 04_cod_08.py < 04_dat_01.txt     # optimal solution with branch & bound
-python 04_cod_09.py                       # generate a random instance
+python 04_cod_02.py 04_dat_01.txt          # greedy solution
+python 04_cod_08.py 04_dat_02.txt          # optimal solution with branch & bound
+python 04_cod_09.py 30 40 my_instance.txt  # random instance: 30 candidates, 40 skills
 ```
 
 The modules load each other with `importlib` because their file names start with a digit, so run them from inside their folder.
