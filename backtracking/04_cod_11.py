@@ -30,3 +30,24 @@ class Parcial_ct(base.Parcial):
         cota_inferior = self.coste() + numero_personas_min
 
         return cota_inferior
+
+
+    def cota_v2(self):
+        restantes = set(range(self.cardinal)) - self.habilidades
+
+        aportes = sorted(
+            (len(habs & restantes) for _, habs in self.fichas[self.libre():]),
+            reverse=True,
+        )
+
+        # Cota optimista: cogemos primero a quienes más aportan
+        # (como si sus habilidades no se solaparan entre sí)
+        faltan = len(restantes)
+        contador = 0
+        for aporte in aportes:
+            if faltan <= 0 or aporte == 0:
+                break
+            faltan -= aporte
+            contador += 1
+
+        return contador
