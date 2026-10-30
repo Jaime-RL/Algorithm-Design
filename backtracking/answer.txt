@@ -19,7 +19,8 @@ El grupo minimo tiene 12 integrantes, que cubren las 137 habilidades:
 - Es coherente con la cota inferior de 6 y mejor que los 20 del voraz.
 - Lo obtuve con busqueda exhaustiva con poda, asi que es el minimo, aunque podria haber otros grupos de 12.
 - Para 04_dat_02.txt el optimo es 24, frente a 42 del voraz.
-- Pendiente: no he confirmado que la salida de 04_cod_08 coincida con estos valores.
+- Confirmado con 04_cod_08.py (usando la cota mejorada): devuelve 12 para 04_dat_01.txt y 24 para 04_dat_02.txt,
+  con el grupo {0, 1, 5, 9, 12, 13, 14, 17, 22, 23, 24, 27, 29, 32, 33, 35, 40, 43, 51, 52, 53, 60, 62, 64}.
 
 PREGUNTA 4: COTA MEJORADA PARA BRANCH AND BOUND
 Sea P una coleccion parcial, R = [n] \ (union de Hi para i en P) las habilidades restantes, L los candidatos con indice mayor que el ultimo miembro, y ai = |Hi ∩ R| ordenados de mayor a menor. Entonces:
@@ -27,7 +28,11 @@ Sea P una coleccion parcial, R = [n] \ (union de Hi para i en P) las habilidades
 - Si no: k* = min{ k : a1 + ... + ak >= |R| } y cota(P) = |P| + k*.
 
 Es valida porque k miembros cubren como mucho a1 + ... + ak habilidades de R. Nunca es peor que ceil(|R| / max) de la cota original, que ademas usa candidatos que ya no pueden entrar y no detecta ramas inviables. En una coleccion completa, R = vacio, asi que cota(P) = |P| = coste(), como exige el esquema.
-Para 04_dat_02.txt, la busqueda debe partir de t_mj = 42. No he medido cuantos nodos explora la nueva cota frente a la original.
+Implementada como cota_v2 en 04_cod_11.py; cota() la usa por defecto y la original se conserva como cota_v1.
+Tiempos de 04_cod_08.py:
+- 04_dat_01.txt: 0,06 s con la cota mejorada, frente a unos 3 minutos con la original.
+- 04_dat_02.txt: 3,7 s con la cota mejorada.
+No he contado los nodos explorados con cada cota.
 
 PREGUNTA 5: COMPARACION CON DATOS ALEATORIOS Y ESTIMACION DE T(n)
 No he hecho la comparacion, porque requiere generar datos con 04_cod_09.py y ejecutar ambos algoritmos.
@@ -44,12 +49,5 @@ Estimacion de T(n), con n candidatos = n habilidades y coste O(n^2) por nodo (mo
 La forma aT(n/b) no describe bien este algoritmo, porque cada nivel elimina un candidato en lugar de dividir el problema. Las filas con n/2 son escenarios hipoteticos. Para saber que fila corresponde a cada cota, habria que medir el factor de ramificacion con datos aleatorios.
 
 PENDIENTE
-1. Confirmar con 04_cod_08.py los valores 12 (dat_01) y 24 (dat_02).
-- Confirmado para 04_dat_01.txt: 04_cod_08.py devuelve 12 integrantes, igual que el buscador exacto. 
-Tardó unos 3 minutos. Ahora hago lo mismo con 04_dat_02.txt para confirmar el 24.
-
-2. Medir nodos explorados y tiempos con la cota original y con la mejorada.
-3. Generar datos con 04_cod_09.py y comparar voraz frente a optimo.
-4. Revisar si el proceso bbtest.py sigue en segundo plano.
-
-
+1. Contar los nodos explorados con cota_v1 y con cota_v2.
+2. Generar datos con 04_cod_09.py y comparar voraz frente a optimo.

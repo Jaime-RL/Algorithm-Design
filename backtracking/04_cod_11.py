@@ -12,6 +12,9 @@ extra = importlib.import_module("04_cod_07")
 class Parcial_ct(base.Parcial):
 
     def cota(self):
+        return self.cota_v2()
+
+    def cota_v1(self):
 
         habilidades_restantes = set(range(self.cardinal))
 
@@ -34,20 +37,23 @@ class Parcial_ct(base.Parcial):
 
     def cota_v2(self):
         restantes = set(range(self.cardinal)) - self.habilidades
+        aportaciones = list(self.restos())
 
-        aportes = sorted(
-            (len(habs & restantes) for _, habs in self.fichas[self.libre():]),
-            reverse=True,
-        )
+        # Si los candidatos que quedan no cubren lo que falta,
+        # la rama es inviable
+        if not restantes.issubset(set().union(*aportaciones)):
+            return float("inf")
+
+        aportes = sorted((len(habs) for habs in aportaciones), reverse=True)
 
         # Cota optimista: cogemos primero a quienes más aportan
         # (como si sus habilidades no se solaparan entre sí)
         faltan = len(restantes)
         contador = 0
         for aporte in aportes:
-            if faltan <= 0 or aporte == 0:
+            if faltan <= 0:
                 break
             faltan -= aporte
             contador += 1
 
-        return contador
+        return self.coste() + contador
