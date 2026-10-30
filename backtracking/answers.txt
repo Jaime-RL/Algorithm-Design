@@ -1,0 +1,22 @@
+Pregunta 1
+Sí, en los dos ficheros la unión de las habilidades es [n] (0-136 en 04_dat_01.txt y 0-281 en 04_dat_02.txt), así que coger a todos 
+los candidatos es una solución válida.
+
+Pregunta 2
+El voraz recluta 20 aspirantes (en caso de empate se queda el de menor índice).
+Como el voraz es como mucho H(16) ≈ 3,38 veces el óptimo, cualquier solución tiene al menos 20 / 3,38 ≈ 5,9, es decir, 6 miembros.
+La complejidad es O(|C|·n²): hay como mucho n pasos y en cada uno se recorren los |C| candidatos con un coste O(n), así que con |C| = n queda O(n³).
+
+Pregunta 3
+El grupo mínimo tiene 12 personas: {2, 4, 6, 9, 11, 16, 19, 23, 27, 28, 29, 31}, obtenido con el branch and bound (04_cod_08.py).
+
+Pregunta 4
+Si los candidatos que quedan no cubren las habilidades que faltan, la cota es infinito; si no, la cota es |P| más el número mínimo 
+de candidatos que hacen falta sumando sus aportaciones de mayor a menor hasta llegar a las que faltan.
+Es válida porque k personas no pueden cubrir más que la suma de las k mayores aportaciones, y nunca es peor que la original.
+Con 04_dat_02.txt el óptimo es 24 personas (el voraz daba 42).
+
+Pregunta 5
+Con datos aleatorios de 04_cod_09.py (n = 20 a 60) el voraz queda muy cerca del óptimo: acierta en 8 de 25 casos y nunca se pasa 
+en más de 2, mientras que en los ficheros de la hoja da 20 frente a 12.
+Sin poda, T(n) = 2T(n-1) + O(n²) = O(2^n); con una cota, T(n) = bT(n-1) + O(n²) = O(b^n) con 1 < b < 2, y cuanto mejor es la cota, menor es b.

@@ -58,7 +58,8 @@ class Parcial:
 
     def copia(self):
         aux = self.__class__()
-        aux.fichas = [[etiq, habs.copy()] for etiq, habs in self.fichas]
+        # Las fichas nunca se modifican: se comparten entre copias
+        aux.fichas = self.fichas
         aux.cardinal = self.cardinal
         aux.miembros = self.miembros.copy()
         aux.habilidades = self.habilidades.copy()

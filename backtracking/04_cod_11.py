@@ -16,10 +16,8 @@ class Parcial_ct(base.Parcial):
 
     def cota_v1(self):
 
-        habilidades_restantes = set(range(self.cardinal))
-
         # poda -> cota inferior
-        habilidades_restantes = habilidades_restantes.difference(self.habilidades)
+        habilidades_restantes = self.cardinal - len(self.habilidades)
         maximo = max(
             (len(habs - self.habilidades) for _, habs in self.fichas),
             default=0,
@@ -28,7 +26,7 @@ class Parcial_ct(base.Parcial):
         numero_personas_min = 0
 
         if maximo != 0:
-            numero_personas_min = math.ceil(len(habilidades_restantes) / maximo)
+            numero_personas_min = math.ceil(habilidades_restantes / maximo)
 
         cota_inferior = self.coste() + numero_personas_min
 
@@ -36,19 +34,20 @@ class Parcial_ct(base.Parcial):
 
 
     def cota_v2(self):
-        restantes = set(range(self.cardinal)) - self.habilidades
+        # Las aportaciones ya excluyen lo cubierto, así que basta
+        # comparar cardinales (sin construir el conjunto restante)
+        faltan = self.cardinal - len(self.habilidades)
         aportaciones = list(self.restos())
 
         # Si los candidatos que quedan no cubren lo que falta,
         # la rama es inviable
-        if not restantes.issubset(set().union(*aportaciones)):
+        if len(set().union(*aportaciones)) < faltan:
             return float("inf")
 
         aportes = sorted((len(habs) for habs in aportaciones), reverse=True)
 
         # Cota optimista: cogemos primero a quienes más aportan
         # (como si sus habilidades no se solaparan entre sí)
-        faltan = len(restantes)
         contador = 0
         for aporte in aportes:
             if faltan <= 0:
