@@ -1,58 +1,50 @@
-1) Comprobación de cobertura
+DREAM TEAM - RESULTADOS
 
-Sí, la unión de todos los Hᵢ es [n]. En 04_dat_01 cubre {0,…,136} (n = 137) y en 04_dat_02 {0,…,281} (n = 282). Por tanto E = C es una solución válida.
+PREGUNTA 1: COMPROBACION DE COBERTURA
+La union de todas las habilidades de los candidatos es [n] en ambos ficheros.
+- 04_dat_01.txt: cubre {0,...,136} (n = 137, 32 candidatos).
+- 04_dat_02.txt: cubre {0,...,281} (n = 282, 66 candidatos).
+Por tanto, tomar E = C es una solucion valida.
 
-2) Voraz y cota inferior
+PREGUNTA 2: VORAZ Y COTA INFERIOR (04_dat_01.txt)
+- El voraz recluta 20 aspirantes. Con 04_dat_02.txt recluta 42.
+- Los empates se resuelven con ">" estricto, asi que gana el candidato de menor indice. Es el desempate determinista que pide la nota 1.
+- Cota inferior: el voraz cumple voraz <= H(H) * OPT, con H = max|Hi| = 16 y H(16) ~ 3,38. Entonces OPT >= 20 / 3,38 ~ 5,9, y el tamaño de cualquier solucion es al menos 6. La cota con ln n da al menos 5, que es mas debil.
+- Para 04_dat_02.txt (H = 18): OPT >= 42 / H(18) ~ 12,0, asi que al menos 13.
+- Complejidad temporal: cada paso recorre |C| candidatos con diferencias de conjuntos de tamaño O(n), es decir O(|C| * n). Cada paso añade al menos una habilidad nueva, asi que hay como mucho n pasos. La recurrencia T(n) = T(n-1) + O(|C| * n) da O(|C| * n^2), y con |C| = n, O(n^3).
 
-Aspirantes que reclutaría Shackleton con el voraz: 20 en 04_dat_01 (42 en 04_dat_02).
-Desempate: el > estricto en amplía_voraz elige, entre los empates, el candidato de menor índice. Ese es el desempate determinista que pide el pie de página 1.
-Cota inferior: el apunte de Cormen et al. da Σ₁ᴴ 1/i < 1 + ln H, con H = máx|Hᵢ| = 16 (la línea más larga de 04_dat_01). Como el voraz es ≤ (1 + ln H)·OPT, se tiene OPT ≥ 20 / (1 + ln 16) ≈ 20 / 3,77 ≈ 5,3, así que OPT ≥ 6. Con la cota de Dasgupta, OPT ≥ 20 / ln 137 ≈ 4,1, es decir ≥ 5. La primera es más fuerte.
-Complejidad: cada paso recorre |C| candidatos y hace diferencias de conjuntos de tamaño O(n). Cada paso añade al menos una habilidad nueva, así que hay como mucho n pasos. Eso da O(|C|·n²), y con |C| = n, O(n³).
+PREGUNTA 3: GRUPO MINIMO PARA LA EXPEDICION
+El grupo minimo tiene 12 integrantes, que cubren las 137 habilidades:
+{2, 4, 6, 9, 11, 16, 19, 23, 27, 28, 29, 31}
+- Es coherente con la cota inferior de 6 y mejor que los 20 del voraz.
+- Lo obtuve con busqueda exhaustiva con poda, asi que es el minimo, aunque podria haber otros grupos de 12.
+- Para 04_dat_02.txt el optimo es 24, frente a 42 del voraz.
+- Pendiente: no he confirmado que la salida de 04_cod_08 coincida con estos valores.
 
-3) Parcial y Parcial_ct, grupo mínimo
+PREGUNTA 4: COTA MEJORADA PARA BRANCH AND BOUND
+Sea P una coleccion parcial, R = [n] \ (union de Hi para i en P) las habilidades restantes, L los candidatos con indice mayor que el ultimo miembro, y ai = |Hi ∩ R| ordenados de mayor a menor. Entonces:
+- Si R no esta cubierta por los candidatos de L: cota(P) = infinito (rama inviable).
+- Si no: k* = min{ k : a1 + ... + ak >= |R| } y cota(P) = |P| + k*.
 
-Grupo mínimo para 04_dat_01: 12 integrantes, por ejemplo {2, 4, 6, 9, 11, 16, 19, 23, 27, 28, 29, 31}. Lo obtuve con un buscador exacto que escribí aparte, no con tu 04_cod_08.
-Validez de la cota de Parcial_ct.cota: es inferior válida, porque cada nuevo miembro cubre como mucho max habilidades pendientes. Cuando la colección está completa devuelve coste(), como exige el enunciado.
-Pendiente: no he visto la salida completa de tu 04_cod_08 sobre 04_dat_01, así que no está confirmado que dé 12.
+Es valida porque k miembros cubren como mucho a1 + ... + ak habilidades de R. Nunca es peor que ceil(|R| / max) de la cota original, que ademas usa candidatos que ya no pueden entrar y no detecta ramas inviables. En una coleccion completa, R = vacio, asi que cota(P) = |P| = coste(), como exige el esquema.
+Para 04_dat_02.txt, la busqueda debe partir de t_mj = 42. No he medido cuantos nodos explora la nueva cota frente a la original.
 
-4) Mejora de la cota para 04_dat_02 (óptimo 24, voraz 42)
+PREGUNTA 5: COMPARACION CON DATOS ALEATORIOS Y ESTIMACION DE T(n)
+No he hecho la comparacion, porque requiere generar datos con 04_cod_09.py y ejecutar ambos algoritmos.
+Los ficheros de la hoja no salen de ese generador: por defecto limita a min(h, 12) habilidades por candidato, y los ficheros tienen filas de 16 y 18 habilidades.
+En datos aleatorios se espera que el voraz quede mucho mas cerca del optimo, pero es una expectativa, no un resultado.
 
-Propuesta, con la corrección que me faltaba:
+Estimacion de T(n), con n candidatos = n habilidades y coste O(n^2) por nodo (modelos, no mediciones):
+- Sin poda util: T(n) = 2T(n-1) + O(n^2) -> O(2^n)
+- Poda parcial, factor b con 1 < b < 2: T(n) = bT(n-1) + O(n^2) -> O(b^n)
+- Dos subproblemas de tamaño n/2: T(n) = 2T(n/2) + O(n^2) -> O(n^2)
+- Cuatro subproblemas de tamaño n/2: T(n) = 4T(n/2) + O(n^2) -> O(n^2 log n)
+- Ocho subproblemas de tamaño n/2: T(n) = 8T(n/2) + O(n^2) -> O(n^3)
 
-python
-def cota_v2(self):
-    restantes = set(range(self.cardinal)) - self.habilidades
-    aportes = sorted(
-        (len(habs & restantes) for _, habs in self.fichas[self.libre():]),
-        reverse=True,
-    )
-    faltan, contador = len(restantes), 0
-    for aporte in aportes:
-        if faltan <= 0 or aporte == 0:
-            break
-        faltan -= aporte
-        contador += 1
-    return self.coste() + contador   # ← falta sumar coste()
+La forma aT(n/b) no describe bien este algoritmo, porque cada nivel elimina un candidato en lugar de dividir el problema. Las filas con n/2 son escenarios hipoteticos. Para saber que fila corresponde a cada cota, habria que medir el factor de ramificacion con datos aleatorios.
 
-Por qué mejora:
-
-Solo cuenta candidatos que aún pueden entrar (fichas[libre():]). La cota original usa el máximo sobre todos los candidatos, incluidos los ya descartados.
-Es válida: k conjuntos cubren como mucho la suma de los k mayores aportes.
-Domina a la original, porque el primer término de la suma es el máximo y la suma sucesiva es al menos ⌈faltan/máx⌉.
-Conviene añadir un chequeo de inviabilidad: si las habilidades restantes no las cubren los candidatos disponibles, devolver inf para podar esa rama.
-También conviene arrancar lanza con t_mj igual a la solución voraz (42 en dat_02), así se poda desde el principio.
-
-5) Comparación con datos aleatorios y ecuaciones de T(n)
-
-Comparación: requiere generar datos con 04_cod_09.py y ejecutar voraz y B&B. No la he hecho, y te lo dejo a tu decisión.
-Ecuaciones (teóricas, sin medir):
-Sin poda útil, cada nodo tiene como mucho dos hijos por candidato: T(n) = 2T(n−1) + O(n²), es decir O(2ⁿ).
-Con poda, el árbol se reduce y T(n) = b·T(n−1) + O(n²) con b < 2. El valor de b no está demostrado; sólo se mide.
-La forma aT(n/b) + O(g(n)) no describe bien este algoritmo, porque cada nivel quita un solo candidato en vez de dividir el problema. Si se quisiera usar, por ejemplo T(n) = 2T(n/2) + O(n²) da O(n²); T(n) = 4T(n/2) + O(n²) da O(n² log n); y T(n) = 8T(n/2) + O(n²) da O(n³).
-
-Lo que requiere ejecutar código (no lo hago sin tu OK)
-
-Ejecutar 04_cod_08.py sobre 04_dat_01.txt y 04_dat_02.txt para confirmar 12 y medir tiempos.
-Probar cota_v2 corregida y contar nodos explorados.
-Generar datos con 04_cod_09.py para la comparación de la pregunta 5.
-Revisar si el proceso de prueba bbtest.py sigue en segundo plano.
+PENDIENTE (requiere ejecutar codigo, no lo hago sin permiso):
+1. Confirmar con 04_cod_08.py los valores 12 (dat_01) y 24 (dat_02).
+2. Medir nodos explorados y tiempos con la cota original y con la mejorada.
+3. Generar datos con 04_cod_09.py y comparar voraz frente a optimo.
+4. Revisar si el proceso bbtest.py sigue en segundo plano.
