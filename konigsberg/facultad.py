@@ -4,6 +4,32 @@ Enunciado: representar mediante un grafo no dirigido y no necesariamente
 simple las plantas y los tramos de escalera de la facultad.
 """
 
+import networkx as nx
+
+
+def facultad():
+    """Grafo de la facultad: los vértices son las plantas y las aristas
+    los tramos de escalera. Es un MultiGraph porque puede haber varias
+    escaleras entre las mismas dos plantas."""
+    G = nx.MultiGraph()
+    G.add_nodes_from(["0", "1", "2O", "2E", "3O", "3E"])
+
+    # Planta baja - primera: 7 tramos
+    for _ in range(7):
+        G.add_edge("0", "1")
+
+    # Parte oeste: 2 escaleras que suben hasta la tercera
+    for _ in range(2):
+        G.add_edge("1", "2O")
+        G.add_edge("2O", "3O")
+
+    # Parte este: 2 escaleras que suben hasta la tercera
+    for _ in range(2):
+        G.add_edge("1", "2E")
+        G.add_edge("2E", "3E")
+
+    return G
+
 # 1) ¿Es posible realizar un recorrido que recorra todos los tramos de
 #    escalera una sola vez?
 
@@ -33,3 +59,10 @@ simple las plantas y los tramos de escalera de la facultad.
 #    camino euleriano, si lo hay.
 
 # 8) Analiza la complejidad computacional de tu algoritmo.
+
+
+
+if __name__ == "__main__":
+    G = facultad()
+    print("Número de tramos:", G.number_of_edges())
+    print("Grados:", dict(G.degree()))
