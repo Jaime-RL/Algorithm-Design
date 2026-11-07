@@ -78,6 +78,8 @@ def plantas_impares(G):
 #    - True, si es euleriano;
 #    - una lista de los dos vértices que son los extremos de cualquier camino
 #      euleriano en el grafo, en otro caso.
+#
+#    -> Está en ejercicio6.py (función euleriano_6).
 
 # 7) Describe un algoritmo que, tomando como entrada un grafo, construya un
 #    camino euleriano, si lo hay.
@@ -101,3 +103,7 @@ if __name__ == "__main__":
     from ejercicio5 import euleriano_5
     print("\n¿Facultad euleriana?", euleriano_5(G))
     print("¿Sin planta baja euleriana?", euleriano_5(H))
+
+    from ejercicio6 import euleriano_6
+    print("\nCamino euleriano en la facultad:", euleriano_6(G))
+    print("Camino euleriano sin planta baja:", euleriano_6(H))
