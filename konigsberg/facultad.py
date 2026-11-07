@@ -30,17 +30,32 @@ def facultad():
 
     return G
 
+
+def plantas_impares(G):
+    """Devuelve las plantas a las que llega un número impar de tramos."""
+    return [v for v, d in G.degree() if d % 2 == 1]
+
 # 1) ¿Es posible realizar un recorrido que recorra todos los tramos de
 #    escalera una sola vez?
 
+# SÍ se puede: empezando en la planta 0 y terminando en la 1 (o al revés).
+
 # 2) ¿Es posible recorrer todos los tramos sin repetir ninguno, comenzando y
 #    terminando además en el mismo lugar?
+
+#NO se puede volver al punto de partida, porque para eso todas las
+#       plantas tendrían que tener grado par.
 
 # 3) Responde también estas dos preguntas sobre el grafo resultante de
 #    eliminar la planta baja.
 
 # Un camino euleriano recorre, sin repeticiones, todas las aristas de un grafo.
 # Si además es circular, se denomina ciclo (o circuito) euleriano.
+
+#    Sin la planta baja desaparecen los 7 tramos 0-1 y los grados quedan:
+#    1 -> 4, 2O -> 4, 2E -> 4, 3O -> 2, 3E -> 2. Todos pares.
+#    Por tanto SÍ se puede recorrer todo, y además volviendo al mismo sitio.
+#    Por ejemplo: 1 -> 2E -> 3E -> 2E -> 1 -> 2O -> 3O -> 2O -> 1
 
 # 4) Deduce (o traduce) una caracterización de los grafos que contienen un
 #    camino euleriano y otra de los grafos eulerianos.
@@ -66,3 +81,11 @@ if __name__ == "__main__":
     G = facultad()
     print("Número de tramos:", G.number_of_edges())
     print("Grados:", dict(G.degree()))
+    print("Plantas con grado impar:", plantas_impares(G))
+
+    # Pregunta 3: quitamos la planta baja
+    H = facultad()
+    H.remove_node("0")
+    print("\nSin planta baja")
+    print("Grados:", dict(H.degree()))
+    print("Plantas con grado impar:", plantas_impares(H))
