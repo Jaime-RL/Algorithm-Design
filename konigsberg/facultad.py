@@ -83,8 +83,37 @@ def plantas_impares(G):
 
 # 7) Describe un algoritmo que, tomando como entrada un grafo, construya un
 #    camino euleriano, si lo hay.
+#
+#    Algoritmo de Hierholzer (está en ejercicio7.py, función construir_camino):
+#    1. Con euleriano_6 vemos si hay camino. Si no, devolvemos False.
+#       Si hay dos plantas impares empezamos en una de ellas; si no, en
+#       cualquiera.
+#    2. Metemos la planta inicial en una pila.
+#    3. Mientras la pila no esté vacía, miramos la planta de arriba:
+#       - si le queda algún tramo sin usar, lo marcamos como usado y
+#         apilamos la planta a la que lleva (seguimos andando);
+#       - si no le quedan tramos, nos hemos atascado: la sacamos de la
+#         pila y la añadimos al camino.
+#    4. El camino, leído al revés, es el camino euleriano.
+#    La idea es ir recorriendo ciclos y empalmarlos en el camino principal.
 
 # 8) Analiza la complejidad computacional de tu algoritmo.
+#
+#    Llamamos n al número de vértices (plantas) y m al de aristas (tramos).
+#    - Comprobar si hay camino (euleriano_6): calcular los grados y ver si
+#      es conexo con is_connected (un recorrido del grafo) cuesta O(n + m).
+#    - Preparar las listas de vecinos: cada arista se apunta dos veces, una
+#      en cada extremo, así que cuesta O(n + m).
+#    - Bucle de Hierholzer: cada arista se marca como usada una sola vez y
+#      se saca de cada lista de vecinos una sola vez, y cada vértice se
+#      apila y desapila una vez por cada arista que llega a él. En total
+#      O(m) pasos. Darle la vuelta al camino también es O(m).
+#    Total: O(n + m), es decir, lineal en el tamaño del grafo. No se puede
+#    hacer mejor, porque el camino tiene m + 1 vértices y hay que escribirlos.
+#
+#    Para comparar: el algoritmo de Fleury, antes de cada paso, comprueba si
+#    la arista es un puente recorriendo el grafo (O(n + m)), y lo hace en
+#    cada uno de los m pasos, así que cuesta O(m · (n + m)).
 
 
 if __name__ == "__main__":
@@ -107,3 +136,9 @@ if __name__ == "__main__":
     from ejercicio6 import euleriano_6
     print("\nCamino euleriano en la facultad:", euleriano_6(G))
     print("Camino euleriano sin planta baja:", euleriano_6(H))
+
+    from ejercicio7 import construir_camino
+    print("\nRecorrido de toda la facultad:")
+    print(" -> ".join(construir_camino(G)))
+    print("Recorrido sin planta baja:")
+    print(" -> ".join(construir_camino(H)))
